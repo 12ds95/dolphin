@@ -332,8 +332,9 @@ bool Gamepad::Button::IsMatchingName(std::string_view name) const
   if (m_binding.output.button == SDL_GAMEPAD_BUTTON_NORTH && name == "Button Y")
     return true;
 
-  // Match the old "Button 0"-like names.
-  if (m_binding.output_type == SDL_GAMEPAD_BINDTYPE_BUTTON)
+  // Hat bindings must keep their hat names instead of shadowing raw joystick buttons.
+  // Preserve the old "Button 0"-like aliases for non-hat bindings.
+  if (m_binding.input_type != SDL_GAMEPAD_BINDTYPE_HAT)
     return name == GetLegacyButtonName(m_binding.output.button);
 
   switch (m_binding.input_type)
